@@ -30,7 +30,7 @@ export default function RegisterPage() {
     })
 
     const handleFormSubmit = async (data: z.infer<typeof formSchema>) => {
-        const {status} = await axios.post("/api/Users/register", data).catch(err => {
+        const {status} = await axios.post("/api/v1/Users/register", data).catch(err => {
             toast.error("Something went wrong", {});
             return Promise.reject(err);
         })
@@ -72,7 +72,7 @@ export default function RegisterPage() {
                                 <FieldDescription>
                                     Must be at least 6 characters long.
                                 </FieldDescription>
-                                <Input {...field} id={field.name} type="password" placeholder="********" autoComplete={false}/>
+                                <Input {...field} id={field.name} type="password" placeholder="********" autoComplete="false"/>
                                 {fieldState.invalid && (
                                     <FieldError errors={[fieldState.error]}/>
                                 )}

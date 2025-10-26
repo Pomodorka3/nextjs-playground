@@ -5,11 +5,12 @@ const nextConfig: NextConfig = {
     reactCompiler: true,
     rewrites: async () => [
         {
-            source: '/api/:path*',
-            destination: 'http://localhost:5000/api/:path*',
+            source: '/api/v1/:path*',
+            destination: 'http://localhost:5000/api/v1/:path*',
         },
     ]
 
-};
+}
+;
 
 export default nextConfig;

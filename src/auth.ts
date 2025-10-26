@@ -6,18 +6,22 @@ import axios from "axios";
 async function login(credentials: any) {
     try {
         console.log(credentials);
-        return await axios.post("http://localhost:5000/api/Users/login", credentials).then((res: any) => {
-            const {user} = res;
+        return await axios.post("http://localhost:5000/api/v1/Users/login", credentials).then((res: any) => {
+            // const {user} = res;
+            console.log(res);
             return {
-                name: user.name,
-                email: user.email,
-                image: user.profile_photo,
-                accessToken: res.access_token,
+                // name: user.name,
+                email: "",
+                // image: user.profile_photo,
+                accessToken: res.accessToken,
+                expiresIn: res.expiresIn,
+                refreshToken: res.refreshToken,
                 // If you need any other information you can add here...
             };
         });
     } catch (e) {
         // throw new Error("Something went wrong.");
+        return null;
     }
 }
 
@@ -27,14 +31,16 @@ export const config = {
         CredentialsProvider({
             name: "Credentials",
             credentials: {
-                email: {label: "Email", type: "email", placeholder: "example@email.com"},
-                password: {label: "Password", type: "password", placeholder: "******"}
+                email: {},
+                password: {},
             },
-            async authorize(credentials,) {
+            authorize: async (credentials) => {
                 try {
                     return login(credentials);
                 } catch (e) {
-                    throw new CredentialsSignin("asd");
+                    // throw new CredentialsSignin("asd");
+                    throw new Error("Invalid credentials.")
+                    // return null;
                 }
             },
         }),
@@ -49,6 +55,7 @@ export const config = {
         async session({session, token}: any) {
             session.user = token.user;
             return session;
+            // return null;
         },
     },
     debug: true,
