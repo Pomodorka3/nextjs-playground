@@ -22,9 +22,12 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {Button} from "@/components/ui/button";
 
 export function NavBar() {
     const isMobile = useIsMobile()
+
+    const isLogged = true;
 
     return (
         <div className="flex p-2 shadow-lg">
@@ -41,7 +44,7 @@ export function NavBar() {
                             <Link href="/docs">Docs</Link>
                         </NavigationMenuLink>
                     </NavigationMenuItem>
-                    <NavigationMenuItem className="hidden md:block" >
+                    <NavigationMenuItem className="hidden md:block">
                         <NavigationMenuTrigger disabled>List</NavigationMenuTrigger>
                         <NavigationMenuContent>
                             <ul className="grid w-[300px] gap-4">
@@ -122,21 +125,37 @@ export function NavBar() {
                 </NavigationMenuList>
             </NavigationMenu>
             <div className="flex-1 flex">
-                <DropdownMenu>
-                    <DropdownMenuTrigger className="ml-auto flex space-x-2 items-center px-2">
-                        <Avatar>
-                            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                            <AvatarFallback>CN</AvatarFallback>
-                        </Avatar>
-                        <p className={navigationMenuTriggerStyle()}>Michael</p>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                        <DropdownMenuSeparator/>
-                        <DropdownMenuItem>Profile</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => {alert("Logging out")}}>Log Out</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                {!isLogged && (
+                    <div className="ml-auto space-x-2">
+                        <>
+                            <Button asChild variant="default">
+                                <Link href="/">
+                                    Login
+                                </Link>
+                            </Button>
+                            <Button variant="outline">Register</Button>
+                        </>
+                    </div>
+                )}
+                {isLogged && (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger className="ml-auto flex space-x-2 items-center px-2">
+                            <Avatar>
+                                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn"/>
+                                <AvatarFallback>CN</AvatarFallback>
+                            </Avatar>
+                            <p className={navigationMenuTriggerStyle()}>Michael</p>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuSeparator/>
+                            <DropdownMenuItem>Profile</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => {
+                                alert("Logging out")
+                            }}>Log Out</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                )}
             </div>
         </div>
     )
