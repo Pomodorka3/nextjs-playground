@@ -27,10 +27,10 @@ import {Button} from "@/components/ui/button";
 export function NavBar() {
     const isMobile = useIsMobile()
 
-    const isLogged = true;
+    const isLogged = false;
 
     return (
-        <div className="flex p-2 shadow-lg">
+        <div className="flex p-2 shadow-lg bg-white">
             <div className="flex-1"/>
             <NavigationMenu viewport={isMobile} className="mx-auto">
                 <NavigationMenuList className="flex-wrap">
@@ -129,11 +129,15 @@ export function NavBar() {
                     <div className="ml-auto space-x-2">
                         <>
                             <Button asChild variant="default">
-                                <Link href="/">
+                                <Link href="/login">
                                     Login
                                 </Link>
                             </Button>
-                            <Button variant="outline">Register</Button>
+                            <Button variant="outline">
+                                <Link href="/register">
+                                    Register
+                                </Link>
+                            </Button>
                         </>
                     </div>
                 )}
