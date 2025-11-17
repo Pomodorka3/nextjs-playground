@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from "react"
 import Link from "next/link"
 import {CircleCheckIcon, CircleHelpIcon, CircleIcon} from "lucide-react"
@@ -23,19 +21,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {Button} from "@/components/ui/button";
-import {signOut} from "next-auth/react";
-import {redirect} from "next/navigation";
-import LogoutButton from "@/app/components/LogoutButton";
+import {signIn, signOut, useSession} from "next-auth/react";
+import {auth} from "@/auth";
+import AuthenticatedHeader from "@/app/components/AuthenticatedHeader";
 
-export function NavBar() {
-    const isMobile = useIsMobile()
+export async function NavBar() {
 
-    const isLogged = false;
-
+    const session = await auth()
     return (
         <div className="flex p-2 shadow-lg bg-white">
             <div className="flex-1"/>
-            <NavigationMenu viewport={isMobile} className="mx-auto">
+            <NavigationMenu className="mx-auto">
                 <NavigationMenuList className="flex-wrap">
                     <NavigationMenuItem>
                         <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
@@ -80,116 +76,29 @@ export function NavBar() {
                             </ul>
                         </NavigationMenuContent>
                     </NavigationMenuItem>
-                    <NavigationMenuItem className="hidden md:block">
-                        <NavigationMenuTrigger disabled>Simple</NavigationMenuTrigger>
-                        <NavigationMenuContent>
-                            <ul className="grid w-[200px] gap-4">
-                                <li>
-                                    <NavigationMenuLink asChild>
-                                        <Link href="#">Components</Link>
-                                    </NavigationMenuLink>
-                                    <NavigationMenuLink asChild>
-                                        <Link href="#">Documentation</Link>
-                                    </NavigationMenuLink>
-                                    <NavigationMenuLink asChild>
-                                        <Link href="#">Blocks</Link>
-                                    </NavigationMenuLink>
-                                </li>
-                            </ul>
-                        </NavigationMenuContent>
-                    </NavigationMenuItem>
-                    <NavigationMenuItem className="hidden md:block">
-                        <NavigationMenuTrigger disabled>With Icon</NavigationMenuTrigger>
-                        <NavigationMenuContent>
-                            <ul className="grid w-[200px] gap-4">
-                                <li>
-                                    <NavigationMenuLink asChild>
-                                        <Link href="#" className="flex-row items-center gap-2">
-                                            <CircleHelpIcon/>
-                                            Backlog
-                                        </Link>
-                                    </NavigationMenuLink>
-                                    <NavigationMenuLink asChild>
-                                        <Link href="#" className="flex-row items-center gap-2">
-                                            <CircleIcon/>
-                                            To Do
-                                        </Link>
-                                    </NavigationMenuLink>
-                                    <NavigationMenuLink asChild>
-                                        <Link href="#" className="flex-row items-center gap-2">
-                                            <CircleCheckIcon/>
-                                            Done
-                                        </Link>
-                                    </NavigationMenuLink>
-                                </li>
-                            </ul>
-                        </NavigationMenuContent>
-                    </NavigationMenuItem>
                 </NavigationMenuList>
             </NavigationMenu>
             <div className="flex-1 flex">
-                {!isLogged && (
-                    <div className="ml-auto space-x-2">
+                {!session && (
+                    <div className="ml-auto space-x-2 my-auto">
                         <>
                             <Button asChild variant="default">
                                 <Link href="/login">
                                     Login
                                 </Link>
                             </Button>
-                            <Button variant="outline">
+                            <Button asChild variant="outline">
                                 <Link href="/register">
                                     Register
-                                </Link>
-                            </Button>
-                            <LogoutButton/>
-                            <Button variant="outline">
-                                <Link href="/profile">
-                                    Profile
                                 </Link>
                             </Button>
                         </>
                     </div>
                 )}
-                {isLogged && (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger className="ml-auto flex space-x-2 items-center px-2">
-                            <Avatar>
-                                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn"/>
-                                <AvatarFallback>CN</AvatarFallback>
-                            </Avatar>
-                            <p className={navigationMenuTriggerStyle()}>Michael</p>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                            <DropdownMenuSeparator/>
-                            <DropdownMenuItem>Profile</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => {
-                                alert("Logging out")
-                            }}>Log Out</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                {session?.user && (
+                    <AuthenticatedHeader user={session.user}/>
                 )}
             </div>
         </div>
-    )
-}
-
-function NavBarListItem({
-                            title,
-                            children,
-                            href,
-                            ...props
-                        }: React.ComponentPropsWithoutRef<"li"> & { href: string }) {
-    return (
-        <li {...props}>
-            <NavigationMenuLink asChild>
-                <Link href={href}>
-                    <div className="text-sm leading-none font-medium">{title}</div>
-                    <p className="text-muted-foreground line-clamp-2 text-sm leading-snug">
-                        {children}
-                    </p>
-                </Link>
-            </NavigationMenuLink>
-        </li>
     )
 }

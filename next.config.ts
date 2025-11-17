@@ -8,7 +8,17 @@ const nextConfig: NextConfig = {
             source: '/api/v1/:path*',
             destination: 'http://localhost:5000/api/v1/:path*',
         },
-    ]
+    ],
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'lh3.googleusercontent.com',
+                port: '',
+                pathname: '/**',
+            }
+        ]
+    }
 
 }
 ;

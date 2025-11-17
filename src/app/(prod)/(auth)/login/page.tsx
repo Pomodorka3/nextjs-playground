@@ -7,10 +7,12 @@ import {Button} from "@/components/ui/button";
 import {zodResolver} from "@hookform/resolvers/zod"
 import * as z from "zod"
 import {Controller, useForm} from "react-hook-form";
-import {AuthError} from "next-auth";
 import {toast} from "sonner";
 import {redirect} from "next/navigation";
 import {signIn} from "next-auth/react";
+import * as React from "react";
+import GoogleIcon from "@/components/ui/icons/GoogleIcon";
+import {AuthError} from "next-auth";
 
 const formSchema = z.object({
     email: z
@@ -32,15 +34,13 @@ export default function LoginPage() {
     })
 
     const handleFormSubmit = async (data: z.infer<typeof formSchema>) => {
-        // try {
-        const response = await signIn('credentials', {redirect: false, password: data.password, email: data.email})
-        console.log("Submit", response)
-        if (response.error == "CredentialsSignin") {
-            toast.error("Wrong credentials", {});
+        try {
+            await signIn('credentials', {redirectTo: "/", password: data.password, email: data.email})
+        } catch (error) {
+            if (error instanceof AuthError)
+                toast.error("Login failed", {});
+            throw error
         }
-
-        await new Promise(r => setTimeout(r, 500));
-        redirect("/")
     }
 
 
@@ -75,6 +75,12 @@ export default function LoginPage() {
                     <Button form="login-form" className="w-20 mx-auto" size="lg" type="submit">Login</Button>
                 </FieldSet>
             </form>
+            <div className="flex justify-center my-4">
+                <Button onClick={() => signIn("google")} variant="default" className="bg-gray-500 flex">
+                    <GoogleIcon padding={12}/>
+                    Login (Google)
+                </Button>
+            </div>
         </div>
     );
 }

@@ -6,7 +6,7 @@ import {Button} from "@/components/ui/button";
 import * as React from "react";
 
 export default function LogoutButton() {
-    return <Button variant="destructive" onClick={() => signOut(redirect("/", ))}>
+    return <Button variant="destructive" onClick={() => signOut()}>
         Logout
     </Button>
 }
