@@ -3,13 +3,14 @@
 import {Field, FieldGroup, FieldLabel, FieldSet} from "@/components/ui/field";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
-import {signIn} from "next-auth/react";
 
 import {zodResolver} from "@hookform/resolvers/zod"
 import * as z from "zod"
 import {Controller, useForm} from "react-hook-form";
 import {AuthError} from "next-auth";
 import {toast} from "sonner";
+import {redirect} from "next/navigation";
+import {signIn} from "next-auth/react";
 
 const formSchema = z.object({
     email: z
@@ -33,12 +34,13 @@ export default function LoginPage() {
     const handleFormSubmit = async (data: z.infer<typeof formSchema>) => {
         // try {
         const response = await signIn('credentials', {redirect: false, password: data.password, email: data.email})
-        console.log(response)
+        console.log("Submit", response)
         if (response.error == "CredentialsSignin") {
             toast.error("Wrong credentials", {});
         }
 
-        // TODO: Redirect
+        await new Promise(r => setTimeout(r, 500));
+        redirect("/")
     }
 
 

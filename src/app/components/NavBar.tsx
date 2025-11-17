@@ -23,6 +23,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {Button} from "@/components/ui/button";
+import {signOut} from "next-auth/react";
+import {redirect} from "next/navigation";
+import LogoutButton from "@/app/components/LogoutButton";
 
 export function NavBar() {
     const isMobile = useIsMobile()
@@ -136,6 +139,12 @@ export function NavBar() {
                             <Button variant="outline">
                                 <Link href="/register">
                                     Register
+                                </Link>
+                            </Button>
+                            <LogoutButton/>
+                            <Button variant="outline">
+                                <Link href="/profile">
+                                    Profile
                                 </Link>
                             </Button>
                         </>
